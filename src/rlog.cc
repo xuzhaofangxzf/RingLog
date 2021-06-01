@@ -259,8 +259,13 @@ bool ring_log::decis_file(int year, int mon, int day, int hour)
     else if (ftell(_fp) >= LOG_USE_LIMIT)
     {
         fclose(_fp);
-        char old_path[1024] = {};
+        // char old_path[1024] = {};
         char new_path[1024] = {};
+        sprintf(new_path, "%s/%s.%s.%d%02d%02d%02d.%u.log.%d", _log_dir, _prog_name, _log_level_str, _year, _mon, _day, _hour, _pid, _log_cnt);
+        _fp = fopen(new_path, "w");
+        if (_fp)
+            _log_cnt += 1;
+#if 0
         //mv xxx.log.[i] xxx.log.[i + 1]
         for (int i = _log_cnt - 1;i > 0; --i)
         {
@@ -275,6 +280,7 @@ bool ring_log::decis_file(int year, int mon, int day, int hour)
         _fp = fopen(old_path, "w");
         if (_fp)
             _log_cnt += 1;
+#endif
     }
     return _fp != NULL;
 }
